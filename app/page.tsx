@@ -1,5 +1,3 @@
-// import { create } from "domain";
-// import Image from "next/image";
 "use client";
 import { useCallback, useState } from "react";
 import { format } from "date-fns";
@@ -27,8 +25,8 @@ interface TimerState {
 }
 
 const useTimerStore = create<TimerState>((set, get) => ({
-  workTime: 50 * 60, // Default to 25 minutes
-  breakTime: 10 * 60, // Default to 5 minutes
+  workTime: 50 * 60, // Default to 50 minutes
+  breakTime: 10 * 60, // Default to 10 minutes
   remainingTime: 50 * 60,
   isRunning: false,
   isWorkSession: true,
@@ -165,43 +163,40 @@ export default function Home() {
   ]);
 
   return (
-    <div className="bg-white flex items-center justify-center h-screen text-gray-800 font-sans font-semibold">
-      <div className="rounded-md p-8 flex flex-col justify-between h-[80%] w-[40%] bg-white shadow-xl border-1 border-gray-100">
-        <div className="text-3xl font-bold  text-center">
-          <h1>Timer</h1>
-          <h2 className="text-xl font-semibold mb-2 text-center">
+    <div className="bg-white flex items-center justify-center min-h-screen text-gray-800 font-sans font-semibold p-4">
+      <div className="rounded-md p-6 sm:p-8 flex flex-col justify-between min-h-[500px] w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl bg-white shadow-xl border border-gray-100">
+        <div className="text-center mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">Timer</h1>
+          <h2 className="text-lg sm:text-xl font-semibold text-center">
             {isWorkSession ? "WORK SESSION" : "BREAK SESSION"}
           </h2>
         </div>
-        <div className="flex justify-center ">
-          <h1 className="text-center font-bold text-5xl">
-            <div className=" text-center text-6xl font-extrabold text-gray-800">
-              {format(new Date(remainingTime * 1000), "mm:ss")}
-            </div>
-          </h1>
+
+        <div className="flex justify-center mb-8">
+          <div className="text-center text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-800">
+            {format(new Date(remainingTime * 1000), "mm:ss")}
+          </div>
         </div>
-        <div className="flex flex-col gap-2 justify-center items-center">
-          <div className="flex gap-2 justify-center">
+
+        <div className="flex flex-col gap-4 justify-center items-center">
+          <div className="flex gap-3 justify-center">
             <button
-              className="rounded-md p-2 px-5 text-center text-white text-center  flex justify-center bg-blue-500"
+              className="rounded-md py-3 px-6 text-center text-white bg-blue-500 hover:bg-blue-600 transition-colors"
               onClick={isRunning ? pauseTimer : startTimer}
             >
-              <h1 className="text-white">{isRunning ? "Pause" : "Start"}</h1>
+              {isRunning ? "Pause" : "Start"}
             </button>
-            {/* <button className="rounded-md p-2 px-5 text-center bg-blue-300 text-white">
-              pause
-            </button> */}
             <button
-              className="rounded-md p-2 px-5 text-center bg-red-800 text-white"
+              className="rounded-md py-3 px-6 text-center bg-red-800 hover:bg-red-900 text-white transition-colors"
               onClick={resetTimer}
             >
-              reset
+              Reset
             </button>
           </div>
-          <div className="flex flex-col md:flex-row gap-4 md:gap-0 justify-around items-center w-full mt-5">
-            <div className="flex flex-col space-y-2">
-              <p className="text-sm text-center ">Time Interval</p>
 
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center items-center w-full mt-6">
+            <div className="flex flex-col space-y-2 w-full sm:w-auto">
+              <p className="text-sm text-center font-medium">Work Time (min)</p>
               <div className="flex gap-2">
                 <input
                   id="work-input"
@@ -218,46 +213,45 @@ export default function Home() {
                   }}
                   min="1"
                   max="120"
-                  className="flex-1 bg-blue-500 border-gray-600 text-white p-2 px-4 border-gray-100/80 rounded-md"
+                  className="flex-1 bg-blue-500 text-white p-2 px-3 rounded-md text-center min-w-0"
                 />
                 <button
                   onClick={handleSetWorkTime}
-                  className="bg-green-500 border-gray-600 text-white p-2 px-4 rounded-md"
+                  className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md transition-colors"
                 >
                   Set
                 </button>
               </div>
             </div>
 
-            <div className="flex flex-col space-y-2">
-              <div className="flex flex-col gap-2">
-                <p className="text-sm text-center ">Break Interval</p>
-
-                <div className="flex gap-2">
-                  <input
-                    id="break-input"
-                    type="number"
-                    value={inputBreakMinutes}
-                    onChange={(e) =>
-                      setInputBreakMinutes(parseInt(e.target.value) || 0)
+            <div className="flex flex-col space-y-2 w-full sm:w-auto">
+              <p className="text-sm text-center font-medium">
+                Break Time (min)
+              </p>
+              <div className="flex gap-2">
+                <input
+                  id="break-input"
+                  type="number"
+                  value={inputBreakMinutes}
+                  onChange={(e) =>
+                    setInputBreakMinutes(parseInt(e.target.value) || 0)
+                  }
+                  onBlur={handleSetBreakTime}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSetBreakTime();
                     }
-                    onBlur={handleSetBreakTime}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        handleSetBreakTime();
-                      }
-                    }}
-                    min="1"
-                    max="60"
-                    className="flex-1 bg-blue-500 border-gray-600 text-white p-2 px-4 border-gray-100/80 rounded-md"
-                  />
-                  <button
-                    onClick={handleSetBreakTime}
-                    className="bg-green-500 border-gray-600 text-white p-2 px-4 rounded-md"
-                  >
-                    Set
-                  </button>
-                </div>
+                  }}
+                  min="1"
+                  max="60"
+                  className="flex-1 bg-blue-500 text-white p-2 px-3 rounded-md text-center min-w-0"
+                />
+                <button
+                  onClick={handleSetBreakTime}
+                  className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md transition-colors"
+                >
+                  Set
+                </button>
               </div>
             </div>
           </div>
