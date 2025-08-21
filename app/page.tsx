@@ -166,7 +166,7 @@ export default function Home() {
 
   return (
     <div className="bg-white flex items-center justify-center h-screen text-gray-800 font-sans font-semibold">
-      <div className="rounded-md p-8 flex flex-col justify-between h-3/4 w-2/6 bg-white shadow-xl border-1 border-gray-100">
+      <div className="rounded-md p-8 flex flex-col justify-between h-[80%] w-[40%] bg-white shadow-xl border-1 border-gray-100">
         <div className="text-3xl font-bold  text-center">
           <h1>Timer</h1>
           <h2 className="text-xl font-semibold mb-2 text-center">
